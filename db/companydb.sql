@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2024 a las 06:26:28
+-- Tiempo de generación: 13-10-2024 a las 17:13:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -105,6 +105,28 @@ INSERT INTO `projects` (`project_id`, `project_name`, `start_date`, `end_date`, 
 (5, 'market research', '2023-04-25', NULL, 20000),
 (6, 'social media campaign', '2023-05-30', NULL, 12000);
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `user`, `email`, `password`) VALUES
+(1, 'admin', 'admin@admin.com', '123123'),
+(2, 'raul', 'raulcorrea@example.com', '123123'),
+(3, 'piero', 'piero@example.com', '123123123');
+
 --
 -- Índices para tablas volcadas
 --
@@ -129,6 +151,14 @@ ALTER TABLE `projects`
   ADD PRIMARY KEY (`project_id`);
 
 --
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user` (`user`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -149,6 +179,12 @@ ALTER TABLE `employees`
 --
 ALTER TABLE `projects`
   MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

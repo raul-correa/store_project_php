@@ -75,24 +75,7 @@
             </div>
         </div>
     </div>
-
-    <div class="container mt-4 mb-4">
-        <h2>Login</h2>
-
-        <form class="form" action="login.php" method="post">
-            <label class="form-label">Usuario</label>
-            <input class="form-control" id="username" name="username" type="text" maxlength="8" required >
-
-            <label class="form-label">Contraseña</label>
-            <input class="form-control" id="password" name="password" type="password" required >
-
-
-            <div class="d-grid">
-                <input class="btn btn-primary" type="submit">
-            </div>
-        </form>
-    </div>
-
+    
     <!-- footer.php -->
 
     <?php include 'footer.php'; ?>
