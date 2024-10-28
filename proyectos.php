@@ -1,6 +1,14 @@
 <?php
 require 'db.php';
 session_start();
+
+//Variable de busqueda
+$search = isset($_GET["search"]) ? $_GET["search"] : "";
+
+//SQL de busqueda
+$sql = "SELECT project_name, budget FROM projects WHERE project_name LIKE '%$search%'";
+$result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -18,20 +26,37 @@ session_start();
 
     <?php include 'header.php'; ?>
 
+    <!-- buscador de empleados -->
+    <div class="container mt-4">
+        <form action="" class="d-flex">
+            <input class="form-control me-2" type="search" name="search" method="GET" placeholder="Ingresa del proyecto" value="<?php echo $search ?>">
+            <input class="btn btn-outline-dark" type="submit" value="Buscar">
+        </form>
+     </div>
+
     <div class="container mt-4 mb-4">
         <h2>Proyectos</h2>
 
         <?php
         //Verificar si hay resultados
-        if($result2->num_rows>0){
-            echo "<ul>";
+        if($result->num_rows>0){ ?>
 
-            while($row = $result2->fetch_assoc()){
-                echo "<li>".$row["project_name"]." ".$row["budget"]."</li>";
-            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre del departamento</th>
+                    </tr>
+                </thead>
 
-            echo "</ul>";
-        } else{
+                <tbody>
+                    <?php while($row = $result->fetch_assoc()){
+                    echo "<tr>"."<td>".$row["project_name"]."</td><td>".$row["budget"]."</td></tr>";
+                } ?>
+                </tbody>
+
+            </table>
+
+        <?php } else{
             echo "No existen proyectos";
         }
         ?>
