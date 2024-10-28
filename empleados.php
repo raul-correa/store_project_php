@@ -1,6 +1,14 @@
 <?php
 require 'db.php';
 session_start();
+
+//Variable de busqueda
+$search = isset($_GET["search"]) ? $_GET["search"] : "";
+
+//SQL de busqueda
+$sql = "SELECT first_name, last_name, phone_number FROM employees WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%'";
+$result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -18,20 +26,39 @@ session_start();
 
     <?php include 'header.php'; ?>
 
+    <!-- buscador de empleados -->
+     <div class="container mt-4">
+        <form action="" class="d-flex">
+            <input class="form-control me-2" type="search" name="search" method="GET" placeholder="Ingresa el nombre del empleado a buscar" value="<?php echo $search ?>">
+            <input class="btn btn-outline-dark" type="submit" value="Buscar">
+        </form>
+     </div>
+
     <div class="container mt-4 mb-4">
         <h2>Empleados</h2>
 
         <?php
         //Verificar si hay resultados
-        if($result->num_rows>0){
-            echo "<ul>";
+        if($result->num_rows>0){ ?>
 
-            while($row = $result->fetch_assoc()){
-                echo "<li>".$row["first_name"]." ".$row["last_name"]." ".$row["phone_number"]."</li>";
-            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre del empleado</th>
+                        <th>Apellido del empleado</th>
+                        <th>Telefono del empleado</th>
+                    </tr>
+                </thead>
 
-            echo "</ul>";
-        } else{
+                <tbody>
+                    <?php while($row = $result->fetch_assoc()){
+                    echo "<tr>"."<td>".$row["first_name"]."</td><td>".$row["last_name"]."</td><td>".$row["phone_number"]."</td>"."</tr>";
+                    } ?>
+                </tbody>
+
+            </table>
+
+        <?php } else{
             echo "No existen empleados";
         }
         ?>
