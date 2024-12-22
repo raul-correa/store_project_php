@@ -25,23 +25,23 @@ if(!isset($_SESSION["user"])){
     <?php include 'header.php'; ?>
 
    
-    <div class="container mt-4 mb-4">
+    <div class="container mt-4 mb-4 text-center">
         <h2>¡Hola, <?php echo $_SESSION["user"]; ?>! 👋</h2>
 
         <div class="row text-center mt-4 mb-4">
             <div class="col-4">
-                <img src="images/employees.png" class="img-fluid" width="100" alt="">
-                <h3><a href="gestion_empleados.php">Gestionar Empleados</a></h3>
+                <img src="images/employees.png" class="img-fluid pb-3" width="100" alt="">
+                <h3><a href="gestionar_empleados.php">Gestionar Empleados</a></h3>
             </div>
 
             <div class="col-4">
-                <img src="images/projects.png" class="img-fluid" width="100" alt="">
-                <h3><a href="gestion_proyectos.php">Gestionar Proyectos</a></h3>
+                <img src="images/projects.png" class="img-fluid pb-3" width="100" alt="">
+                <h3><a href="gestionar_proyectos.php">Gestionar Proyectos</a></h3>
             </div>
 
             <div class="col-4">
-                <img src="images/department.png" class="img-fluid" width="100" alt="">
-                <h3><a href="gestion_departamentos.php">Gestionar Departamentos</a></h3>
+                <img src="images/department.png" class="img-fluid pb-3" width="100" alt="">
+                <h3><a href="gestionar_departamentos.php">Gestionar Departamentos</a></h3>
             </div>
         </div>
     </div>
