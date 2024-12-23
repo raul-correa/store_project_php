@@ -10,7 +10,7 @@ if(!isset($_SESSION["user"])){
 }
 
 //Procesamos el formulario de agregar empleado
-if($_SERVER['REQUEST_METHOD']=='POST'){
+if($_SERVER['REQUEST_METHOD']=='POST' && !isset($_POST["employee_id"])){
     $first_name = $_POST["first_name"];
     $last_name = $_POST["last_name"];
     $email = $_POST["email"];
@@ -36,11 +36,30 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 }
 
+//Verificar si se ha enviado el ID del empleado
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["employee_id"])){
+    $employee_id = $_POST["employee_id"];
+    
+
+    //Ejecutamos la consulta para eliminar empleado
+    $sql = "DELETE FROM employees WHERE employee_id = ?";
+    $stmt = $conn-> prepare($sql);
+    $stmt->bind_param("i", $employee_id);
+
+    if($stmt -> execute()){
+        echo "<script>alert('Empleado eliminado con éxito')</script>";
+    } else{
+        echo "<script>alert('No se pudo eliminar al empleado')</script>";
+    }
+
+    $stmt->close();
+}
+
 //Variable de busqueda
 $search = isset($_GET["search"]) ? $_GET["search"] : "";
 
 //SQL de busqueda
-$sql = "SELECT first_name, last_name, phone_number FROM employees WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%'";
+$sql = "SELECT employee_id, first_name, last_name, phone_number FROM employees WHERE first_name LIKE '%$search%' OR last_name LIKE '%$search%'";
 $result = $conn->query($sql);
 
 ?>
@@ -107,7 +126,10 @@ $result = $conn->query($sql);
                             <td><?php echo   $row["phone_number"] ?></td>
                             <td class="options"><button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver Empleado"><i class="fa-regular fa-eye"></i></button></td>
                             <td class="options"><button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar"><i class="fa-regular fa-pen-to-square"></i></button></td>
-                            <td class="options"><button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></button></td>
+                            <form method="POST" onsubmit=" return confirm('¿Estás seguro de eliminar al empleado?')">
+                                <input type="hidden" name="employee_id" value="<?php echo $row['employee_id']; ?>">
+                                <td class="options"><button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></button></td>
+                            </form>
                         </tr>
                     <?php } ?>
                 </tbody>
