@@ -9,6 +9,33 @@ if(!isset($_SESSION["user"])){
     exit();
 }
 
+//Procesamos el formulario de agregar empleado
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $first_name = $_POST["first_name"];
+    $last_name = $_POST["last_name"];
+    $email = $_POST["email"];
+    $phone_number = $_POST["phone_number"];
+    $hire_date = $_POST["hire_date"];
+    $job_title = $_POST["job_title"];
+    $department_id = $_POST["department_id"];
+    
+    //Insertar el nuevo empleado la base de datos
+    $stmt = $conn->prepare("INSERT INTO
+    employees(first_name, last_name, email, phone_number, hire_date, job_title, department_id)
+    VALUES(?,?,?,?,?,?,?)");
+
+    $stmt->bind_param("ssssssi", $first_name, $last_name, $email, $phone_number, $hire_date, $job_title, $department_id);
+
+    if($stmt -> execute()){
+        echo "<script>alert('Empleado agregado con éxito')</script>";
+    } else{
+        echo "<script>alert('Error al agregar el empleado')</script>";
+    }
+
+    $stmt->close();
+
+}
+
 //Variable de busqueda
 $search = isset($_GET["search"]) ? $_GET["search"] : "";
 
@@ -53,7 +80,7 @@ $result = $conn->query($sql);
     <!-- Inicio de botones -->
 
     <div class="container d-flex justify-content-end mt-2">
-        <button class="btn btn-dark mt-2 me-2"><i class="fa-solid fa-user-plus"></i> Agregar empleado</button>
+        <button class="btn btn-dark mt-2 me-2" data-bs-toggle="modal" data-bs-target="#agregarEmpleadoModal"><i class="fa-solid fa-user-plus"></i> Agregar empleado</button>
         <button class="btn btn-outline-dark mt-2"><i class="fa-regular fa-file-pdf"></i> Descargar empleados</button>
     </div>
 
@@ -92,6 +119,72 @@ $result = $conn->query($sql);
         }
         ?>
     </div>
+    <!-- fin tabla empleados -->
+
+    <!-- inicio del modal para agregar empleados -->
+
+    <div class="modal fade" id="agregarEmpleadoModal" tabindex="1" aria-labelledby="agregarEmpleadoModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarEmpleadoModal">Agregar nuevo Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST">
+
+                        <div class="mb-3">
+                            <label>Nombre</label>
+                            <input type="text" name="first_name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Apellido</label>
+                            <input type="text" name="last_name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Correo</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Teléfono</label>
+                            <input type="text" name="phone_number" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Fecha de contratación</label>
+                            <input type="date" name="hire_date" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Cargo</label>
+                            <input type="text" name="job_title" class="form-control" required>
+                        </div>  
+
+                        <div class="mb-3">
+                            <label>Seleccionar departamento</label>
+                            <select class="form-control" name="department_id" required>
+                                <option value="1">HR</option>
+                                <option value="2">IT</option>
+                                <option value="3">Marketing</option>
+                                <option value="4">Sales</option>
+                                <option value="5">Finance</option>
+                            </select>    
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="submit" class="btn btn-dark" value="Crear empleado">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- fin modal agregar empleado -->
 
     <!-- footer.php -->
 
