@@ -9,6 +9,15 @@ if(!isset($_SESSION["user"])){
     exit();
 }
 
+// Agregamos la logica para obtener informacion de un empleado
+if(isset($_GET["view_employee_id"])){
+    $view_employee_id = $_GET["view_employee_id"];
+    $stmt = $conn->prepare("SELECT * FROM employees WHERE employee_id = ?");
+    $stmt->bind_param("i", $view_employee_id);
+    $stmt -> execute();
+    $employee = $stmt->get_result()->fetch_assoc();
+}
+
 //Procesamos el formulario de agregar empleado
 if($_SERVER['REQUEST_METHOD']=='POST' && !isset($_POST["employee_id"])){
     $first_name = $_POST["first_name"];
@@ -124,7 +133,11 @@ $result = $conn->query($sql);
                             <td><?php echo $row["first_name"] ?></td>
                             <td><?php echo $row["last_name"] ?></td>
                             <td><?php echo   $row["phone_number"] ?></td>
-                            <td class="options"><button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver Empleado"><i class="fa-regular fa-eye"></i></button></td>
+                            <td class="options">
+                                <form method="GET">
+                                    <input type="hidden" name="view_employee_id" value="<?php echo $row['employee_id']; ?> ">
+                                    <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver Empleado"><i class="fa-regular fa-eye"></i></button></td>
+                                </form>
                             <td class="options"><button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar"><i class="fa-regular fa-pen-to-square"></i></button></td>
                             <form method="POST" onsubmit=" return confirm('¿Estás seguro de eliminar al empleado?')">
                                 <input type="hidden" name="employee_id" value="<?php echo $row['employee_id']; ?>">
@@ -142,6 +155,39 @@ $result = $conn->query($sql);
         ?>
     </div>
     <!-- fin tabla empleados -->
+
+    <!-- inicio modal de ver empleado -->
+
+    <?php if(isset($employee)){?>
+
+        <div class="modal fade show d-block" tabindex="-1" aria-labelby="verEmpleadoModal" aria-hidden="">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="verEmpleadoModal">Detalles del Empleado</h5>
+                        <a href="gestionar_empleados.php" class="btn-close" aria-label="Cerrar"></a>
+                    </div>
+
+                    <div class="modal-body">
+                        <p><strong>Nombre:</strong> <?php echo $employee['first_name']; ?></p>
+                        <p><strong>Apellido:</strong> <?php echo $employee['last_name']; ?></p>
+                        <p><strong>Email:</strong> <?php echo $employee['email']; ?></p>
+                        <p><strong>Teléfono:</strong> <?php echo $employee['phone_number']; ?></p>
+                        <p><strong>Cargo:</strong> <?php echo $employee['job_title']; ?></p>
+                        <p><strong>Departamento:</strong> <?php echo $employee['department_id']; ?></p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="gestionar_empleados.php" class="btn btn-secondary">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <?php } ?>
+
+    <!-- fin de modal ver empleado -->
 
     <!-- inicio del modal para agregar empleados -->
 
